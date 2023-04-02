@@ -4,7 +4,13 @@ on:
   repository_dispatch:
     types: [zxing-cpp-source-code-update]
   workflow_dispatch:
-  [push, pull_request]:
+  push:
+    branches:
+      - main
+    paths:
+      - "*.cpp"
+      - "CMakeLists.txt"
+  pull_request:
     branches:
       - main
     paths:
