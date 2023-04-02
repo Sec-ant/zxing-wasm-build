@@ -4,6 +4,12 @@ on:
   repository_dispatch:
     types: [zxing-cpp-source-code-update]
   workflow_dispatch:
+  [push, pull_request]:
+    branches:
+      - main
+    paths:
+      - "*.cpp"
+      - "CMakeLists.txt"
 
 env:
   REPO_URL: https://github.com/zxing-cpp/zxing-cpp
