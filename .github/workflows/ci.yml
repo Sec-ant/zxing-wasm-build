@@ -42,3 +42,13 @@ jobs:
         with:
           name: wasm-artifacts
           path: "build/zxing*"
+
+      - name: Set Env
+        run: |
+          echo "NOW=$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/zxing*"
+          tag: ${{ env.NOW }}
