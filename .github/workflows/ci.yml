@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  repository_dispatch:
+    types: [zxing-cpp-source-code-update]
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/zxing-cpp/zxing-cpp
+  REPO_BRANCH: master
+
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone ZXing Cpp Source Code
+        id: clone-zxing-cpp-source-code
+        run: |
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH --single-branch zxing-cpp
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          path: "zxing-cpp/wrappers/my-custom-wasm"
+
+      - name: Setup EMSDK
+        id: setup-emsdk
+        uses: mymindstorm/setup-emsdk@v12
+
+      - name: Configure
+        id: configure
+        run: emcmake cmake -Szxing-cpp/wrappers/my-custom-wasm -Bbuild
+
+      - name: Build
+        id: build
+        run: cmake --build build -j4
+
+      - name: Upload Artifacts
+        id: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: wasm-artifacts
+          path: "build/zxing*"
