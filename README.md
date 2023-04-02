@@ -2,7 +2,7 @@
 
 ## Build
 
-You can download the latest build output from the continuous integration system from the [Actions](https://github.com/sec-cant/zxing-wasm/actions) tab. Look for 'wasm-artifacts'.
+You can download the latest build output from the continuous integration system from the [Actions](https://github.com/Sec-ant/zxing-wasm/actions/workflows/ci.yml) tab. Look for 'wasm-artifacts'.
 
 ## Performance
 
