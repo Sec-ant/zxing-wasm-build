@@ -24,7 +24,7 @@ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --bind -s ENVIRONMENT=${B
 
 if (BUILD_READERS AND BUILD_WRITERS)
     add_executable (zxing_full BarcodeReader.cpp BarcodeWriter.cpp)
-    target_link_libraries (zxing ZXing::ZXing stb::stb)
+    target_link_libraries (zxing_full ZXing::ZXing stb::stb)
 endif()
 
 if (BUILD_READERS)
