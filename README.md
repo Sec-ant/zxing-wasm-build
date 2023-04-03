@@ -9,7 +9,7 @@ This is a custom tweak of the [ZXing Cpp wasm wrapper](https://github.com/zxing-
 
 ## Build
 
-You can download the latest build output from the continuous integration system from the [Actions](https://github.com/Sec-ant/zxing-wasm/actions/workflows/ci.yml) tab (Look for 'wasm-artifacts'). Or you can download them from the [Release](https://github.com/Sec-ant/zxing-wasm/releases) page.
+You can download the latest build output from the continuous integration system from the [Actions](https://github.com/Sec-ant/zxing-wasm-build/actions/workflows/ci.yml) tab (Look for 'wasm-artifacts'). Or you can download them from the [Release](https://github.com/Sec-ant/zxing-wasm-build/releases) page.
 
 ## Acknoweldgement
 
