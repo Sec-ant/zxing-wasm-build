@@ -47,8 +47,8 @@ public:
 	}
 };
 
-WriteResult generateBarcode(std::wstring text, std::string format, std::string encoding, int margin, int width, int height,
-														int eccLevel)
+WriteResult writeBarcodeToImage(std::wstring text, std::string format, std::string encoding, int margin, int width, int height,
+																int eccLevel)
 {
 	using namespace ZXing;
 	try
@@ -93,5 +93,5 @@ EMSCRIPTEN_BINDINGS(BarcodeWriter)
 
 	class_<WriteResult>("WriteResult").property("image", &WriteResult::image).property("error", &WriteResult::error);
 
-	function("generateBarcode", &generateBarcode);
+	function("writeBarcodeToImage", &writeBarcodeToImage);
 }
