@@ -6,6 +6,7 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/../../zxing.cmake)
 zxing_add_package_stb()
 
 set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_FLAGS "-O3")
 
 option (BUILD_WRITERS "Build with writer support (encoders)" ON)
 option (BUILD_READERS "Build with reader support (decoders)" ON)
