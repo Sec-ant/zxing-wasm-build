@@ -18,6 +18,11 @@ struct ReadResult
 	std::string format{};
 	std::string text{};
 	std::string error{};
+	std::string eccLevel{};
+	std::string version{};
+	int orientation;
+	bool isMirrored;
+	bool isInverted;
 	ZXing::Position position{};
 };
 
@@ -40,7 +45,16 @@ ReadResults readBarcodeFromImageView(ZXing::ImageView iv, bool tryHarder, const 
 		auto results = ReadBarcodes(iv, hints);
 		readResults.resize(results.size());
 		std::transform(results.begin(), results.end(), readResults.begin(), [](auto &result)
-									 { return ReadResult{ToString(result.format()), result.text(), "", result.position()}; });
+									 { return ReadResult{
+												 ToString(result.format()),
+												 result.text(),
+												 "",
+												 result.ecLevel(),
+												 result.version(),
+												 result.orientation(),
+												 result.isMirrored(),
+												 result.isInverted(),
+												 result.position()}; });
 		return readResults;
 	}
 	catch (const std::exception &e)
@@ -88,6 +102,11 @@ EMSCRIPTEN_BINDINGS(BarcodeReader)
 			.field("format", &ReadResult::format)
 			.field("text", &ReadResult::text)
 			.field("error", &ReadResult::error)
+			.field("eccLevel", &ReadResult::eccLevel)
+			.field("version", &ReadResult::version)
+			.field("orientation", &ReadResult::orientation)
+			.field("isMirrored", &ReadResult::isMirrored)
+			.field("isInverted", &ReadResult::isInverted)
 			.field("position", &ReadResult::position);
 
 	register_vector<ReadResult>("ReadResults");
