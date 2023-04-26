@@ -1,4 +1,4 @@
-name: Update Checker
+name: Update Check
 
 env:
   REPO_URL: https://github.com/zxing-cpp/zxing-cpp
