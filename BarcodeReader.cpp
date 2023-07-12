@@ -66,7 +66,7 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 					result.orientation(),
 					result.isMirrored(),
 					result.isInverted(),
-					result.bytes(),
+					std::move(result.bytes()),
 			});
 		}
 
