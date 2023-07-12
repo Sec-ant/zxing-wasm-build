@@ -8,6 +8,7 @@
 #include "ReadBarcode.h"
 
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -29,6 +30,9 @@ struct ReadResult
 	int orientation;
 	bool isMirrored;
 	bool isInverted;
+	ByteArray bytes;
+	emscripten::val get_bytes() const { return emscripten::val(emscripten::typed_memory_view(bytes.size(), bytes.data())); };
+	void set_bytes(emscripten::val){};
 };
 
 std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::string &formats, int maxSymbols)
@@ -62,6 +66,7 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 					result.orientation(),
 					result.isMirrored(),
 					result.isInverted(),
+					result.bytes(),
 			});
 		}
 
@@ -69,11 +74,11 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 	}
 	catch (const std::exception &e)
 	{
-		return {{"", "", e.what()}};
+		return {{"", {}, e.what()}};
 	}
 	catch (...)
 	{
-		return {{"", "", "Unknown error"}};
+		return {{"", {}, "Unknown error"}};
 	}
 	return {};
 }
@@ -85,7 +90,7 @@ std::vector<ReadResult> readBarcodesFromImage(int bufferPtr, int bufferLength, b
 			stbi_load_from_memory(reinterpret_cast<const unsigned char *>(bufferPtr), bufferLength, &width, &height, &channels, 1),
 			stbi_image_free);
 	if (buffer == nullptr)
-		return {{"", "", "Error loading image"}};
+		return {{"", {}, "Error loading image"}};
 
 	return readBarcodes({buffer.get(), width, height, ImageFormat::Lum}, tryHarder, formats, maxSymbols);
 }
@@ -119,7 +124,8 @@ EMSCRIPTEN_BINDINGS(BarcodeReader)
 			.field("version", &ReadResult::version)
 			.field("orientation", &ReadResult::orientation)
 			.field("isMirrored", &ReadResult::isMirrored)
-			.field("isInverted", &ReadResult::isInverted);
+			.field("isInverted", &ReadResult::isInverted)
+			.field("bytes", &ReadResult::get_bytes, &ReadResult::set_bytes);
 
 	value_object<ZXing::PointI>("Point").field("x", &ZXing::PointI::x).field("y", &ZXing::PointI::y);
 
