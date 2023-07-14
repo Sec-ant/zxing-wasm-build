@@ -18,4 +18,4 @@ All thanks to [zxing-cpp/zxing-cpp](https://github.com/zxing-cpp/zxing-cpp).
 
 ## License
 
-MIT
+Apache-2.0
