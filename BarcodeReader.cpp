@@ -22,6 +22,7 @@ struct ReadResult
 {
 	std::string format{};
 	std::string text{};
+	emscripten::val bytes;
 	std::string error{};
 	Position position{};
 	std::string symbologyIdentifier{};
@@ -30,9 +31,6 @@ struct ReadResult
 	int orientation;
 	bool isMirrored;
 	bool isInverted;
-	ByteArray bytes;
-	emscripten::val get_bytes() const { return emscripten::val(emscripten::typed_memory_view(bytes.size(), bytes.data())); };
-	void set_bytes(emscripten::val){};
 };
 
 std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::string &formats, int maxSymbols)
@@ -53,11 +51,15 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 		std::vector<ReadResult> readResults{};
 		readResults.reserve(results.size());
 
+		thread_local const val Uint8Array = emscripten::val::global("Uint8Array");
+
 		for (auto &result : results)
 		{
+			ByteArray bytes = result.bytes();
 			readResults.push_back({
 					ToString(result.format()),
 					result.text(),
+					Uint8Array.new_(typed_memory_view(bytes.size(), bytes.data())),
 					ToString(result.error()),
 					result.position(),
 					result.symbologyIdentifier(),
@@ -66,7 +68,6 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 					result.orientation(),
 					result.isMirrored(),
 					result.isInverted(),
-					std::move(result.bytes()),
 			});
 		}
 
@@ -117,6 +118,7 @@ EMSCRIPTEN_BINDINGS(BarcodeReader)
 	value_object<ReadResult>("ReadResult")
 			.field("format", &ReadResult::format)
 			.field("text", &ReadResult::text)
+			.field("bytes", &ReadResult::bytes)
 			.field("error", &ReadResult::error)
 			.field("position", &ReadResult::position)
 			.field("symbologyIdentifier", &ReadResult::symbologyIdentifier)
@@ -124,10 +126,11 @@ EMSCRIPTEN_BINDINGS(BarcodeReader)
 			.field("version", &ReadResult::version)
 			.field("orientation", &ReadResult::orientation)
 			.field("isMirrored", &ReadResult::isMirrored)
-			.field("isInverted", &ReadResult::isInverted)
-			.field("bytes", &ReadResult::get_bytes, &ReadResult::set_bytes);
+			.field("isInverted", &ReadResult::isInverted);
 
-	value_object<ZXing::PointI>("Point").field("x", &ZXing::PointI::x).field("y", &ZXing::PointI::y);
+	value_object<ZXing::PointI>("Point")
+			.field("x", &ZXing::PointI::x)
+			.field("y", &ZXing::PointI::y);
 
 	value_object<ZXing::Position>("Position")
 			.field("topLeft", emscripten::index<0>())
