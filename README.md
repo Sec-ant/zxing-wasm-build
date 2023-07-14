@@ -5,7 +5,6 @@ This is a custom tweak of the [ZXing Cpp wasm wrapper](https://github.com/zxing-
 ## Features
 
 - ES6 module
-- Multi-symbol return (allows setting of `maxNumberOfSymbols`)
 - Add `eccLevel`, `version`, `orientation`, `isMirrored` and `isInverted` to read result
 
 ## Build
@@ -18,4 +17,4 @@ All thanks to [zxing-cpp/zxing-cpp](https://github.com/zxing-cpp/zxing-cpp).
 
 ## License
 
-MIT
+Apache-2.0
