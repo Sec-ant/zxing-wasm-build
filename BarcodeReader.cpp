@@ -55,7 +55,7 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 
 		for (auto &result : results)
 		{
-			ByteArray bytes = result.bytes();
+			const ByteArray &bytes = result.bytes();
 			readResults.push_back({
 					ToString(result.format()),
 					result.text(),
