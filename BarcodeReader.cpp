@@ -59,7 +59,7 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 			readResults.push_back({
 					ToString(result.format()),
 					result.text(),
-					Uint8Array.new_(emscripten::typed_memory_view(bytes.size(), bytes.data())),
+					std::move(Uint8Array.new_(emscripten::typed_memory_view(bytes.size(), bytes.data()))),
 					ToString(result.error()),
 					result.position(),
 					result.symbologyIdentifier(),
