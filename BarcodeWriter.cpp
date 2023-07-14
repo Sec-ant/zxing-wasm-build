@@ -18,7 +18,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-class WriteResult
+using namespace ZXing;
+
+struct WriteResult
 {
 	emscripten::val image;
 	std::string error;
@@ -27,7 +29,6 @@ class WriteResult
 WriteResult
 writeBarcodeToImage(std::wstring text, std::string format, std::string encoding, int margin, int width, int height, int eccLevel)
 {
-	using namespace ZXing;
 	try
 	{
 		auto barcodeFormat = BarcodeFormatFromString(format);
