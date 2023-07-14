@@ -51,7 +51,7 @@ std::vector<ReadResult> readBarcodes(ImageView iv, bool tryHarder, const std::st
 		std::vector<ReadResult> readResults{};
 		readResults.reserve(results.size());
 
-		thread_local const val Uint8Array = emscripten::val::global("Uint8Array");
+		thread_local const emscripten::val Uint8Array = emscripten::val::global("Uint8Array");
 
 		for (auto &result : results)
 		{
