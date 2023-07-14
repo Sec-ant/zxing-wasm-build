@@ -22,7 +22,7 @@ class WriteResult
 {
 	emscripten::val image;
 	std::string error;
-}
+};
 
 WriteResult
 writeBarcodeToImage(std::wstring text, std::string format, std::string encoding, int margin, int width, int height, int eccLevel)
@@ -32,7 +32,7 @@ writeBarcodeToImage(std::wstring text, std::string format, std::string encoding,
 	{
 		auto barcodeFormat = BarcodeFormatFromString(format);
 		if (barcodeFormat == BarcodeFormat::None)
-			return {"Unsupported format: " + format};
+			return {{}, "Unsupported format: " + format};
 
 		MultiFormatWriter writer(barcodeFormat);
 		if (margin >= 0)
