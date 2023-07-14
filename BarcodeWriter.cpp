@@ -1,5 +1,6 @@
 /*
  * Copyright 2016 Nu-book Inc.
+ * Copyright 2023 Ze-Zheng Wu
  */
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,38 +18,14 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-class ImageData
-{
-public:
-	uint8_t *const buffer;
-	const int length;
-
-	ImageData(uint8_t *buf, int len) : buffer(buf), length(len) {}
-	~ImageData() { STBIW_FREE(buffer); }
-};
-
 class WriteResult
 {
-	std::shared_ptr<ImageData> _image;
-	std::string _error;
+	emscripten::val image;
+	std::string error;
+}
 
-public:
-	WriteResult(const std::shared_ptr<ImageData> &image) : _image(image) {}
-	WriteResult(std::string error) : _error(std::move(error)) {}
-
-	std::string error() const { return _error; }
-
-	emscripten::val image() const
-	{
-		if (_image != nullptr)
-			return emscripten::val(emscripten::typed_memory_view(_image->length, _image->buffer));
-		else
-			return emscripten::val::null();
-	}
-};
-
-WriteResult writeBarcodeToImage(std::wstring text, std::string format, std::string encoding, int margin, int width, int height,
-																int eccLevel)
+WriteResult
+writeBarcodeToImage(std::wstring text, std::string format, std::string encoding, int margin, int width, int height, int eccLevel)
 {
 	using namespace ZXing;
 	try
@@ -72,18 +49,24 @@ WriteResult writeBarcodeToImage(std::wstring text, std::string format, std::stri
 
 		int len;
 		uint8_t *bytes = stbi_write_png_to_mem(buffer.data(), 0, buffer.width(), buffer.height(), 1, &len);
-		if (bytes == nullptr)
-			return {"Unknown error"};
 
-		return {std::make_shared<ImageData>(bytes, len)};
+		if (bytes == nullptr)
+			return {{}, "Unknown error"};
+
+		thread_local const emscripten::val Uint8Array = emscripten::val::global("Uint8Array");
+
+		emscripten::val js_bytes = Uint8Array.new_(emscripten::typed_memory_view(len, bytes));
+		STBIW_FREE(bytes);
+
+		return { js_bytes }
 	}
 	catch (const std::exception &e)
 	{
-		return {e.what()};
+		return {{}, e.what()};
 	}
 	catch (...)
 	{
-		return {"Unknown error"};
+		return {{}, "Unknown error"};
 	}
 }
 
@@ -91,7 +74,9 @@ EMSCRIPTEN_BINDINGS(BarcodeWriter)
 {
 	using namespace emscripten;
 
-	class_<WriteResult>("WriteResult").property("image", &WriteResult::image).property("error", &WriteResult::error);
+	class_<WriteResult>("WriteResult")
+			.property("image", &WriteResult::image)
+			.property("error", &WriteResult::error);
 
 	function("writeBarcodeToImage", &writeBarcodeToImage);
 }
