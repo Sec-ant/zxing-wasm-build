@@ -59,7 +59,7 @@ writeBarcodeToImage(std::wstring text, std::string format, std::string encoding,
 		emscripten::val js_bytes = Uint8Array.new_(emscripten::typed_memory_view(len, bytes));
 		STBIW_FREE(bytes);
 
-		return { js_bytes }
+		return { js_bytes };
 	}
 	catch (const std::exception &e)
 	{
@@ -75,7 +75,7 @@ EMSCRIPTEN_BINDINGS(BarcodeWriter)
 {
 	using namespace emscripten;
 
-	class_<WriteResult>("WriteResult")
+	value_object<WriteResult>("WriteResult")
 			.property("image", &WriteResult::image)
 			.property("error", &WriteResult::error);
 
