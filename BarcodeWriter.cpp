@@ -76,8 +76,8 @@ EMSCRIPTEN_BINDINGS(BarcodeWriter)
 	using namespace emscripten;
 
 	value_object<WriteResult>("WriteResult")
-			.property("image", &WriteResult::image)
-			.property("error", &WriteResult::error);
+			.field("image", &WriteResult::image)
+			.field("error", &WriteResult::error);
 
 	function("writeBarcodeToImage", &writeBarcodeToImage);
 }
