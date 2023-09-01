@@ -18,6 +18,8 @@ env:
 jobs:
   build-wasm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Clone ZXing Cpp Source Code
         id: clone-zxing-cpp-source-code
