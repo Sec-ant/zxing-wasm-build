@@ -1,3 +1,5 @@
+This repository has been integrated into the [zxing-wasm](https://github.com/Sec-ant/zxing-wasm) repository, where ongoing development will take place.
+
 # A Custom WebAssembly/WASM Wrapper/Library for ZXing Cpp
 
 This is a custom tweak of the [ZXing Cpp wasm wrapper](https://github.com/zxing-cpp/zxing-cpp/tree/master/wrappers/wasm), with cloud build via Github Actions.
